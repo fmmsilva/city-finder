@@ -88,8 +88,10 @@ Server listening on port 3000
 7. Permitir adicionar uma nova cidade
 
     ```
+    # Request
     POST /api/cities HTTP/1.1
 
+    # Response
     {
         "ibge_id": 4200200,
         "uf": "SC",
@@ -117,22 +119,52 @@ Server listening on port 3000
     DELETE /api/cities?ibge_id=2800308 HTTP/1.1
     ```
 
+    **Respostas possíveis:**
+
+        | Status code   | Significado                            |
+        | ------------- | -------------------------------------- |
+        | 204           | Cidade deletada                        |
+        | 404           | Nenhuma cidade encontrada              |
+        | 500           | Erro do servidor                       |
+
 9. Permitir selecionar uma coluna (do CSV) e através dela entrar com uma string para filtrar retornar assim todos os objetos que contenham tal string
 
     ```
     GET /api/cities?name=Aguiar&uf=PB HTTP/1.1
     ```
 
+    **Respostas possíveis:**
+
+        | Status code   | Significado                            |
+        | ------------- | -------------------------------------- |
+        | 200           | Ok                                     |
+        | 404           | Nenhuma cidade encontrada              |
+        | 500           | Erro do servidor                       |
+
 10. Retornar a quantidade de registro baseado em uma coluna. Não deve contar itens iguais.
 
     ```
+    # Request
     GET /api/cities/distinct?col=uf HTTP/1.1
+
+    # Response
+    {
+        "column": "uf",
+        "count": 27
+    }
     ```
 
 11. Retornar a quantidade de registros total
 
     ```
+    # Request
     GET /api/cities/count HTTP/1.1
+
+    # Response
+    {
+        "query": {},
+        "found": 5564
+    }
     ```
 
 12. Dentre todas as cidades, obter as duas cidades mais distantes uma da outra com base na localização (distância em KM em linha reta)
