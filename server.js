@@ -13,12 +13,20 @@ app.use(bodyParser.json());
 
 // -------------------- ROUTER CONFIG --------------------
 
-var index = require('./routes/index');
 var cities = require('./routes/cities');
+var distances = require('./routes/distances');
 
-app.use('/api', index);
+app.use((err, req, res, next) => {
+    if(err instanceof SyntaxError) {
+        res.status(400).json({ msg: 'JSON inválido' });
+        return;
+    }
+
+    next();
+});
+
 app.use('/api', cities);
+app.use('/api', distances);
 
-// ---------------- APPLICATION BOOTSTRAP ----------------
 
 module.exports = app;
