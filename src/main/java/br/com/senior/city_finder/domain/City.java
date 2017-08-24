@@ -1,37 +1,41 @@
 package br.com.senior.city_finder.domain;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Created by rsorage on 8/18/17.
+ * Created by rsorage on 8/20/17.
  */
-@Entity
+@Document(collection = "cities")
 public class City {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private String id;
 
+    @Field("ibge_id")
+    @JsonProperty("ibge_id")
     private Integer ibgeId;
-    private String name;
+
+    @Field("no_accents")
+    @JsonProperty("no_accents")
     private String noAccents;
+
+    @Field("alternative_names")
+    @JsonProperty("alternative_names")
     private String alternativeNames;
 
-    @Version
-    private Integer version;
+    private String uf;
+    private String name;
+    private Boolean capital;
+    private GeoJsonPoint location;
+    private String microregion;
+    private String mesoregion;
 
-    @Column(name = "capital")
-    private Boolean isCapital;
-
-    @Column(name = "lon")
-    private Float longitude;
-
-    @Column(name = "lat")
-    private Float latitude;
-
-    @ManyToOne
-    @JoinColumn(name = "state_id")
-    private State state;
+    public String getId() {
+        return id;
+    }
 
     public Integer getIbgeId() {
         return ibgeId;
@@ -41,12 +45,36 @@ public class City {
         this.ibgeId = ibgeId;
     }
 
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getCapital() {
+        return capital;
+    }
+
+    public void setCapital(Boolean capital) {
+        this.capital = capital;
+    }
+
+    public GeoJsonPoint getLocation() {
+        return location;
+    }
+
+    public void setLocation(GeoJsonPoint location) {
+        this.location = location;
     }
 
     public String getNoAccents() {
@@ -65,43 +93,19 @@ public class City {
         this.alternativeNames = alternativeNames;
     }
 
-    public Integer getVersion() {
-        return version;
+    public String getMicroregion() {
+        return microregion;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setMicroregion(String microregion) {
+        this.microregion = microregion;
     }
 
-    public Boolean getCapital() {
-        return isCapital;
+    public String getMesoregion() {
+        return mesoregion;
     }
 
-    public void setCapital(Boolean capital) {
-        isCapital = capital;
-    }
-
-    public Float getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Float longitude) {
-        this.longitude = longitude;
-    }
-
-    public Float getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Float latitude) {
-        this.latitude = latitude;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
+    public void setMesoregion(String mesoregion) {
+        this.mesoregion = mesoregion;
     }
 }
