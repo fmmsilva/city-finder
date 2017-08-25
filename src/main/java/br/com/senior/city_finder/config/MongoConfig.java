@@ -13,13 +13,13 @@ import java.net.UnknownHostException;
 @Configuration
 public class MongoConfig extends AbstractMongoConfiguration {
 
-    @Value("spring.data.mongodb.host")
+    @Value("${spring.data.mongodb.host}")
     private String host;
 
-    @Value("spring.data.mongodb.port")
-    private int port;
+    @Value("${spring.data.mongodb.port}")
+    private Integer port;
 
-    @Value("spring.data.mongodb.database")
+    @Value("${spring.data.mongodb.database}")
     private String database;
 
     private String uri = String.format("mongodb://%s:%s/%s", host, port, database);
