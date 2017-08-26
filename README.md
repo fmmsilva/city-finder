@@ -2,7 +2,7 @@
 
 ## Requisitos
 
-1. NodeJS v6.x
+1. NodeJS v6.x **ou** Java v1.7+
 2. MongoDB v3.x 
 
 ## Clonando repositório GIT
@@ -11,12 +11,33 @@
 $ git clone git@github.com:rsorage/city-finder.git
 ```
 
-O projeto será baixado na pasta `city-finder`. Entre na pasta do projeto e execute o comando `npm install` para que as dependências do NodeJS sejam instaladas e configuradas.
+O projeto será baixado na pasta `city-finder`.
+
+### Branches
+
+Atualmente existem duas branches para o projeto.
+
+* `master`: Projeto original em NodeJS
+* `java`: Nova versão utilizando Java com Spring Framework
+
+#### Utilizando a versão em NodeJS
+
+Entre na pasta do projeto e execute o comando `npm install` para que as dependências do NodeJS sejam instaladas e configuradas.
 
 ```bash
 $ cd city-finder
 $ npm install
 ```
+
+#### Utilizando a versão em Java
+
+Mudando de branch:
+
+```bash
+$ git checkout java
+```
+
+Utilize então o tutorial fornecido na branch `java`.
 
 ## Importando dados para o MongoDB
 
