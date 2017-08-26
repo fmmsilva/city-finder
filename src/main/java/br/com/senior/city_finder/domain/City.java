@@ -3,6 +3,7 @@ package br.com.senior.city_finder.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -14,6 +15,7 @@ public class City {
     @Id
     private String id;
 
+    @Indexed
     @Field("ibge_id")
     @JsonProperty("ibge_id")
     private Integer ibgeId;
@@ -26,10 +28,14 @@ public class City {
     @JsonProperty("alternative_names")
     private String alternativeNames;
 
-    private String uf;
+    @Indexed
     private String name;
-    private Boolean capital;
+
+    @Indexed
     private GeoJsonPoint location;
+
+    private String uf;
+    private Boolean capital;
     private String microregion;
     private String mesoregion;
 

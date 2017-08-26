@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface CityRepository extends MongoRepository<City, String> {
 
-    City findByName(@Param("name") String name);
+    List<City> findByName(@Param("name") String name);
     List<City> findByUf(@Param("uf") String uf);
     City findByIbgeId(@Param("ibge-id") Integer ibgeId);
 
