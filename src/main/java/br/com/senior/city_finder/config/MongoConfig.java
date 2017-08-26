@@ -1,6 +1,7 @@
 package br.com.senior.city_finder.config;
 
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
@@ -22,8 +23,6 @@ public class MongoConfig extends AbstractMongoConfiguration {
     @Value("${spring.data.mongodb.database}")
     private String database;
 
-    private String uri = String.format("mongodb://%s:%s/%s", host, port, database);
-
 
     @Override
     protected String getDatabaseName() {
@@ -32,6 +31,6 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
     @Override
     public Mongo mongo() throws UnknownHostException {
-        return new Mongo(host, port);
+        return new MongoClient(host, port);
     }
 }
