@@ -2,8 +2,9 @@
 
 ## Requisitos
 
-1. NodeJS v6.x **ou** Java v1.7+
-2. MongoDB v3.x 
+1. Java v1.8+
+2. Maven v3.x
+3. MongoDB v3.x
 
 ## Clonando repositório GIT
 
@@ -20,14 +21,6 @@ Atualmente existem duas branches para o projeto.
 * `master`: Projeto original em NodeJS
 * `java`: Nova versão utilizando Java com Spring Framework
 
-#### Utilizando a versão em NodeJS
-
-Entre na pasta do projeto e execute o comando `npm install` para que as dependências do NodeJS sejam instaladas e configuradas.
-
-```bash
-$ cd city-finder
-$ npm install
-```
 
 #### Utilizando a versão em Java
 
@@ -37,38 +30,16 @@ Mudando de branch:
 $ git checkout java
 ```
 
-Utilize então o tutorial fornecido na branch `java`.
-
 ## Importando dados para o MongoDB
 
-Nessa etapa nosso banco de dados será populado. 
-
-**Atenção:** No MongoDB será criado um banco de dados chamado `city-finder` e uma collection chamada `cities`. Caso já existentes, **os dados anteriores serão sobrescritos**. Para mudar essas configurações padrão, altere a linha 27 do arquivo `config.sh`. O parâmetro da opção -d especifica o nome do banco e a opção -c a collection.
-
-```bash
-echo "### Importando dados do CSV..."
-mongoimport -d city-finder -c cities --type csv cities.csv --headerline --ignoreBlanks --drop 
-```
-
-Certifique-se que o MongoDB está instalado em seu sistema e o serviço rodando. Então execute o arquivo `scripts/config.sh`.
-
-```bash
-$ sudo service mongod start
-$ cd scripts
-$ ./mongo_config.sh
-```
+Seguir os passos descritos na branch `master`.
 
 ## Rodando o servidor localmente
 
-Na raíz do projeto execute o comando `npm run start` e o servidor iniciará na porta 3000.
+Na raíz do projeto execute o comando `mvn spring-boot:run` e o servidor iniciará na porta 8080.
 
 ```bash
-$ npm run start
-
-> city-finder@1.0.0 start /home/rsorage/workspaces/nodejs/city-finder
-> node ./bin/www
-
-Server listening on port 3000
+$ mvn spring-boot:run
 ```
 
 # Desafio
@@ -79,31 +50,37 @@ Server listening on port 3000
 2. Retornar somente as cidades que são capitais ordenadas por nome
 
     ```
-    GET /api/cities/capitals HTTP/1.1
+    GET /api/cities/search/findByCapitalIsTrue?sort=name HTTP/1.1
     ```
 
 3. Retornar o nome do estado com a maior e menor quantidade de cidades e a quantidade de cidades
 
     ```
-    GET /api/cities/state/count/min-max HTTP/1.1
+    GET /api/cities/statesMaxMinCities HTTP/1.1
     ```
 
 4. Retornar a quantidade de cidades por estado
 
+    Retornanado a quantidade de cidades num estado específico.
     ```
-    GET /api/cities/state/count HTTP/1.1
+    GET /api/cities/search/countByUf{?uf} HTTP/1.1
+    ```
+    
+    Retornando a quantidade de cidades por cada estado.
+    ```
+    GET /api/cities/countCitiesPerState HTTP/1.1
     ```
 
 5. Obter os dados da cidade informando o id do IBGE
 
     ```
-    GET /api/cities?ibge_id=2800308 HTTP/1.1
+    GET /api/cities/search/findByIbgeId{?ibge-id} HTTP/1.1
     ```
 
 6. Retornar o nome das cidades baseado em um estado selecionado
 
     ```
-    GET /api/cities?uf=PB HTTP/1.1
+    GET /api/citiessearch/findByUf{?uf,page} HTTP/1.1
     ```
 
 7. Permitir adicionar uma nova cidade
@@ -112,7 +89,6 @@ Server listening on port 3000
     # Request
     POST /api/cities HTTP/1.1
 
-    # Response
     {
         "ibge_id": 4200200,
         "uf": "SC",
@@ -120,8 +96,10 @@ Server listening on port 3000
         "no_accents": "Agrolandia",
         "microregion": "Ituporanga",
         "mesoregion": "Vale do Itajaí",
-        "lon": -49.8256533877,
-        "lat": -27.400516588
+        "location": {
+        	"type": "Point",
+        	"coordinates": [-49.8256533877, -27.400516588]
+        }
     }
     ```
 
@@ -151,27 +129,19 @@ Server listening on port 3000
 9. Permitir selecionar uma coluna (do CSV) e através dela entrar com uma string para filtrar retornar assim todos os objetos que contenham tal string
 
     ```
-    GET /api/cities?name=Aguiar&uf=PB HTTP/1.1
+    GET /api/cities/searchByColumn?col=name&query=Blumenau HTTP/1.1
     ```
-
-    **Respostas possíveis:**
-
-        | Status code   | Significado                            |
-        | ------------- | -------------------------------------- |
-        | 200           | Ok                                     |
-        | 404           | Nenhuma cidade encontrada              |
-        | 500           | Erro do servidor                       |
 
 10. Retornar a quantidade de registro baseado em uma coluna. Não deve contar itens iguais.
 
     ```
     # Request
-    GET /api/cities/distinct?col=uf HTTP/1.1
+    GET /api/cities/countByColumn?col=uf HTTP/1.1
 
     # Response
     {
         "column": "uf",
-        "count": 27
+        "total": 27
     }
     ```
 
@@ -179,55 +149,55 @@ Server listening on port 3000
 
     ```
     # Request
-    GET /api/cities/count HTTP/1.1
+    GET /api/cities/countAllCities HTTP/1.1
 
     # Response
-    {
-        "query": {},
-        "found": 5564
-    }
+    5565
     ```
 
 12. Dentre todas as cidades, obter as duas cidades mais distantes uma da outra com base na localização (distância em KM em linha reta)
 
     ```
     # Request
-    GET /api/cities/distance/max HTTP/1.1
+    GET /api/cities/mostDistant HTTP/1.1
 
     # Response
-    {
-        "cities": [
-            {
-                "ibge_id": 1200336,
-                "uf": "AC",
-                "name": "Mncio Lima",
-                "no_accents": "Mancio Lima",
-                "microregion": "Cruzeiro do Sul",
-                "mesoregion": "Vale do Juru",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        -72.9165010261,
-                        -7.5932225939
-                    ]
-                }
+    [
+        {
+            "id": "599a4a644d87b45d1c563f72",
+            "name": "Marechal Thaumaturgo",
+            "location": {
+                "x": -72.7902659087,
+                "y": -8.9535911232,
+                "coordinates": [
+                    -72.7902659087,
+                    -8.9535911232
+                ],
+                "type": "Point"
             },
-            {
-                "ibge_id": 2605459,
-                "uf": "PE",
-                "name": "Fernando de Noronha",
-                "no_accents": "Fernando de Noronha",
-                "microregion": "Fernando de Noronha",
-                "mesoregion": "Metropolitana de Recife",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        -32.4351863281,
-                        -3.8520214008
-                    ]
-                }
-            }
-        ],
-        "distance": 4496.374518259978
-    }
+            "uf": "AC",
+            "microregion": "Cruzeiro do Sul",
+            "mesoregion": "Vale do Juru",
+            "ibge_id": 1200351,
+            "no_accents": "Marechal Thaumaturgo"
+        },
+        {
+            "id": "599a4a644d87b45d1c564528",
+            "name": "Fernando de Noronha",
+            "location": {
+                "x": -32.4351863281,
+                "y": -3.8520214008,
+                "coordinates": [
+                    -32.4351863281,
+                    -3.8520214008
+                ],
+                "type": "Point"
+            },
+            "uf": "PE",
+            "microregion": "Fernando de Noronha",
+            "mesoregion": "Metropolitana de Recife",
+            "ibge_id": 2605459,
+            "no_accents": "Fernando de Noronha"
+        }
+    ]
     ```

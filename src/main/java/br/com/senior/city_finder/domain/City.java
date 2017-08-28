@@ -1,15 +1,20 @@
 package br.com.senior.city_finder.domain;
 
+import br.com.senior.city_finder.util.GeoJsonDeserializer;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Created by rsorage on 8/20/17.
+ * Entidade do MongoDB.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "cities")
 public class City {
     @Id
@@ -31,7 +36,7 @@ public class City {
     @Indexed
     private String name;
 
-    @Indexed
+    @JsonDeserialize(using = GeoJsonDeserializer.class)
     private GeoJsonPoint location;
 
     private String uf;
